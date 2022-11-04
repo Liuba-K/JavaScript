@@ -43,7 +43,9 @@ function addTocart(id, productName, productPrice) {
   // Ставим новую общую стоимость товаров в корзине.
   totalTableBasket.textContent = getTotalBasketPrice().toFixed(2);
   // Отрисовываем продукт.
-  productRowBasket(id);
+  renderProductInBasket(id)
+
+
 }
 
 
@@ -66,16 +68,28 @@ function getTotalBasketPrice() {
     .reduce((acc, product) => acc + product.productPrice * product.piece, 0);
 }
 
-function productRowBasket(id) {
+function renderProductInBasket(id) {
+  const basketRowProduct = document.querySelector('.basket')
+    .querySelector(`.basketRow[data-productId="${id}"]`);
+
+  if (!basketRowProduct) {
+    productRowBasket(id);  // функция выполнилась
+    return;
+  }
+  basketRowProduct.querySelector('.productCount').textContent = itembasket[id].piece;
+  basketRowProduct.querySelector('.productTotalRow').textContent = itembasket[id].piece * itembasket[id].productPrice;
+}
+
+function productRowBasket(productId) {
   const productRow = `
-      <div class="basketRow">
-        <div>${itembasket[id].productName}</div>
+      <div class="basketRow" data-productId="${productId}">
+        <div>${itembasket[productId].productName}</div>
         <div>
-          <span class="productCount">${itembasket[id].piece}</span> шт.
+          <span class="productCount">${itembasket[productId].piece}</span> шт.
         </div>
-        <div>$${itembasket[id].productPrice}</div>
+        <div>$${itembasket[productId].productPrice}</div>
         <div>
-          $<span class="productTotalRow">${(itembasket[id].productPrice * itembasket[id].piece).toFixed(2)
+          $<span class="productTotalRow">${(itembasket[productId].productPrice * itembasket[productId].piece).toFixed(2)
     }</span >
         </div >
       </div >`;
